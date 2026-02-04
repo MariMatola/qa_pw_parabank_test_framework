@@ -1,0 +1,13 @@
+{
+  firstName: 'Brandi84807',
+  lastName: 'Shanahan47572',
+  address: '1561 Krajcik Fords',
+  city: 'Leannonworth',
+  state: 'HI',
+  zipCode: '09166',
+  phoneNumber: '300-434-6680 x6959',
+  ssn: '14284318758',
+  username: 'brandi84807silk',
+  password: 'F63GxCosygqh',
+  confirmPassword: 'F63GxCosygqh'
+}

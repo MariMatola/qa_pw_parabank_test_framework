@@ -23,7 +23,9 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: https://example.com
+    baseURL: 'https://parabank.parasoft.com/',
+    /* Enable source maps to show test file instead of imported modules */
+    trace: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
