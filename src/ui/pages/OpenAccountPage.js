@@ -42,12 +42,6 @@ export class OpenAccountPage {
         return await this.newAccountId.textContent();
     }
 
-    async assertAccountOverviewPageIsLoaded() {
-        await this.step('Assert Account Overview Page is Loaded', async () => {
-            await expect(this.accountOverviewHeading).toBeVisible();
-        });
-    }
-
     async assertOpenNewAccountPageIsLoaded() {
         await this.step('Assert Open New Account Page is Loaded', async () => {
             await expect(this.openNewAccountHeading).toBeVisible();

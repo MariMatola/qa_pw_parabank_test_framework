@@ -4,7 +4,10 @@ import { ProfilePage } from '../../../src/ui/pages/ProfilePage';
 import { AccountOverviewPage } from '../../../src/ui/pages/AccountOverviewPage';
 import { OpenAccountPage } from '../../../src/ui/pages/OpenAccountPage';
 import { formatCurrency } from '../../../src/common/helpers/stringHelpers';
-import { openMultipleAccounts } from '../../../src/common/helpers/openMultipleAccounts';
+import {
+    openMultipleAccounts,
+    NEW_ACCOUNT_INITIAL_BALANCE
+} from '../../../src/common/helpers/openMultipleAccounts';
 
 const parametrizedTestData = [
     { accountType: 'CHECKING', accountNumber: 1 },
@@ -60,8 +63,8 @@ parametrizedTestData.forEach(({ accountType, accountNumber }) => {
             for (let i = 1; i <= accountNumber; i++) {
                 await accountOverviewPage.assertcorrectDataInTheTableRow(
                     i,
-                    formatCurrency(90),
-                    formatCurrency(90),
+                    formatCurrency(NEW_ACCOUNT_INITIAL_BALANCE),
+                    formatCurrency(NEW_ACCOUNT_INITIAL_BALANCE),
                     newAccountIds[i - 1]
                 );
             }

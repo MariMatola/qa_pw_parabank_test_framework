@@ -5,7 +5,6 @@ export class ApplyForLoanPage {
         this.page = page;
         this.userId = userId;
         this.applyForLoanHeading = page
-        this.applyForLoanHeading = page
             .getByRole('heading', { name: 'Apply for a Loan' });
         this.amountInputField = page.locator('#amount');
         this.downPaymentInputField = page.locator('#downPayment');

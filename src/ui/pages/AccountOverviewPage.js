@@ -15,6 +15,13 @@ export class AccountOverviewPage {
         this.availableAmountColumnHeader = page
             .getByRole('columnheader', { name: 'Available Amount' });
         this.totalRow = page.locator('#accountTable tbody tr').last();
+        this.firstAccountLink = page.locator('#accountTable a');
+    }
+
+    async openFirstAccountDetails() {
+        await this.step('Open First Account Details', async () => {
+            await this.firstAccountLink.first().click();
+        });
     }
 
     async step(title, stepToRun) {
@@ -24,15 +31,12 @@ export class AccountOverviewPage {
     async getAccountNumberFromTheTableRow(rowNumber) {
         let accountNumber = null;
         await this.step('Get Account Number from the Table Row', async () => {
-            await expect(this.page.locator('#accountTable tbody tr')
+            const accountCell = this.page.locator('#accountTable tbody tr')
                 .nth(rowNumber)
                 .getByRole('cell')
-                .nth(0)).toBeVisible();
-            accountNumber = await this.page.locator('#accountTable tbody tr')
-                .nth(rowNumber)
-                .getByRole('cell')
-                .nth(0)
-                .textContent();
+                .nth(0);
+            await expect(accountCell).toBeVisible();
+            accountNumber = await accountCell.textContent();
         });
         return accountNumber;
     }
@@ -40,15 +44,12 @@ export class AccountOverviewPage {
     async getTotalBalance() {
         let totalBalance = null;
         await this.step('Get Total Balance', async () => {
-            await expect(this.page.locator('#accountTable tbody tr')
+            const totalBalanceCell = this.page.locator('#accountTable tbody tr')
                 .last()
                 .getByRole('cell')
-                .nth(1)).toBeVisible();
-            totalBalance = await this.page.locator('#accountTable tbody tr')
-                .last()
-                .getByRole('cell')
-                .nth(1)
-                .textContent();
+                .nth(1);
+            await expect(totalBalanceCell).toBeVisible();
+            totalBalance = await totalBalanceCell.textContent();
         });
         return totalBalance;
     }
@@ -74,17 +75,18 @@ export class AccountOverviewPage {
         await this.step('Assert Correct Data in the Table Row', async () => {
             const row = this.page.locator('#accountTable tbody tr')
                 .nth(rowNumber);
-            await expect(row.getByRole('cell').nth(0)).toBeVisible();
+            const accountCell = row.getByRole('cell').nth(0);
+            const balanceCell = row.getByRole('cell').nth(1);
+            const availableAmountCell = row.getByRole('cell').nth(2);
+
+            await expect(accountCell).toBeVisible();
             if (accountNumber) {
-                await expect(row.getByRole('cell').nth(0))
-                    .toContainText(accountNumber);
+                await expect(accountCell).toContainText(accountNumber);
             }
-            await expect(row.getByRole('cell').nth(1)).toBeVisible();
-            await expect(row.getByRole('cell').nth(1))
-                .toContainText(`${balanceAmount}`);
-            await expect(row.getByRole('cell').nth(2)).toBeVisible();
-            await expect(row.getByRole('cell').nth(2))
-                .toContainText(availableAmount);
+            await expect(balanceCell).toBeVisible();
+            await expect(balanceCell).toContainText(`${balanceAmount}`);
+            await expect(availableAmountCell).toBeVisible();
+            await expect(availableAmountCell).toContainText(availableAmount);
         });
     }
 

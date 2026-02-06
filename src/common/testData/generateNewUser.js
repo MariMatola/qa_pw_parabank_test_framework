@@ -1,12 +1,10 @@
 import { faker } from '@faker-js/faker';
 
 export function generateNewUserData(logger = null) {
-    const randomNum1 = Math.floor(Math.random() * 100000);
-    const randomNum2 = Math.floor(Math.random() * 100000);
-    const firstName = `${faker.person.firstName()}${randomNum1}`;
-    const lastName = `${faker.person.lastName()}${randomNum2}`;
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
     const password = faker.internet.password({ length: 12 });
-    const username = firstName.toLowerCase() + faker.word.sample();
+    const username = firstName.toLowerCase();
 
     const user = {
         firstName,

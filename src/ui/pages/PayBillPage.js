@@ -8,8 +8,8 @@ export class PayBillPage {
         this.payBillHeading = page
             .getByRole('heading', { name: 'Bill Payment Service' });
         this.sendPaymentButton = page
-            .getByRole('cell', { name: 'Send Payment' });
-        this.accountIdSelectList = page.getByRole('combobox');
+            .getByRole('button', { name: 'Send Payment' });
+        this.accountIdSelectList = page.locator('select[name="fromAccountId"]');
         this.billPaymentCompleteHeading = page
             .getByRole('heading', { name: 'Bill Payment Complete' });
     }
@@ -26,7 +26,6 @@ export class PayBillPage {
 
     async fillInFormField(field, value) {
         await this.step(`Fill in ${field.name}`, async () => {
-            console.log(`field ${field.name} is filled with value ${value}`);
             await this.page.locator(field.locator).fill(value);
         });
     }

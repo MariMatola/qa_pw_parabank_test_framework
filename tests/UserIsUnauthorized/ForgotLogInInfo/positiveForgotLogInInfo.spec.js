@@ -17,7 +17,9 @@ test('User is able to retrieve login info', async ({
     await forgotInfoPage.assertForgotInfoPageIsLoaded();
     await forgotInfoPage.fillInForgotInfoForm(user);
     await forgotInfoPage.clickFindMyLoginInfoButton();
-    await pages[1].waitForTimeout(1000);
+    await pages[1]
+        .getByText(`Welcome ${user.firstName} ${user.lastName}`)
+        .waitFor({ state: 'visible' });
     await profilePage.assertUserIsLoggedIn(user.firstName, user.lastName);
     await profilePage.assertCorrectLoginInfo(user.username, user.password);
 });

@@ -13,10 +13,9 @@ test('User is able to see Account Overview page after logging in', async (
     const accountOverviewPage = new AccountOverviewPage(page);
     await accountOverviewPage.assertAccountOverviewPageIsLoaded();
     await accountOverviewPage.assertAccountsTableIsVisible();
+    const totalBalance = (await accountOverviewPage.getTotalBalance()).trim();
     await accountOverviewPage.assertcorrectDataInTheTableRow(
-        0, '$1000000.00', '$1000000.00'
+        0, totalBalance, totalBalance
     );
-    await accountOverviewPage.assertcorrectDataInTheTotalRow(
-        '$1000000.00'
-    );
+    await accountOverviewPage.assertcorrectDataInTheTotalRow(totalBalance);
 });

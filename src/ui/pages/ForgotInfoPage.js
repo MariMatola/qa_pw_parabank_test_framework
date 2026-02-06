@@ -68,10 +68,10 @@ export class ForgotInfoPage {
     });
   }
 
-//   async assertErrorMessage(errorMessage) {
-//     await this.step(`Assert Error Message`, async () => {
-//       const errorMessageLocator = this.page.getByText(errorMessage);
-//       await expect(errorMessageLocator).toBeVisible();
-//     });
-//   }
+  async assertErrorMessage(errorMessage) {
+    await this.step(`Assert Error Message`, async () => {
+      const errorMessageLocator = this.page.getByText(errorMessage);
+      await expect(errorMessageLocator).toBeVisible();
+    });
+  }
 }

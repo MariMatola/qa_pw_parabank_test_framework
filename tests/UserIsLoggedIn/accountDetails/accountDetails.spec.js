@@ -15,10 +15,12 @@ test.describe('Account Details & Activity', () => {
         await signUpUser(user, page);
         await profilePage.clickAccountOverviewLink();
         await accountOverviewPage.assertAccountOverviewPageIsLoaded();
+        await accountOverviewPage.openFirstAccountDetails();
         const detailsPage = new AccountDetailsPage(page);
-        await detailsPage.openFirstAccountDetails();
         await detailsPage.filterTransactions(
             '2025-01-01', '2025-12-31'
         );
+        const transactionsCount = await detailsPage.getTransactionsCount();
+        expect(transactionsCount).toBeGreaterThanOrEqual(0);
     });
 });

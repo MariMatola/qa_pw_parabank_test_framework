@@ -1,5 +1,8 @@
 import { formatCurrency, parseCurrency } from './stringHelpers';
 
+/** Initial balance for each newly opened account (used by helper and tests). */
+export const NEW_ACCOUNT_INITIAL_BALANCE = 90;
+
 export async function openMultipleAccounts({
     accountNumber,
     accountType,
@@ -14,8 +17,8 @@ export async function openMultipleAccounts({
     let updatedFirstAccountAvailableBalance = firstAccountAvailableBalance;
 
     for (let i = 1; i <= accountNumber; i++) {
-        const newAccountBalance = 90;
-        const newAccountAvailableBalance = 90;
+        const newAccountBalance = NEW_ACCOUNT_INITIAL_BALANCE;
+        const newAccountAvailableBalance = NEW_ACCOUNT_INITIAL_BALANCE;
 
         await profilePage.clickOpenNewAccountLink();
         await openAccountPage.assertOpenNewAccountPageIsLoaded();
@@ -34,8 +37,6 @@ export async function openMultipleAccounts({
             parseCurrency(updatedFirstAccountAvailableBalance)
             - newAccountAvailableBalance
         );
-
-        await profilePage.clickAccountOverviewLink();
     }
 
     return {

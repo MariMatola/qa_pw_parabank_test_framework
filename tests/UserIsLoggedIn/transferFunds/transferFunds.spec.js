@@ -4,135 +4,83 @@ import { ProfilePage } from '../../../src/ui/pages/ProfilePage';
 import { AccountOverviewPage } from '../../../src/ui/pages/AccountOverviewPage';
 import { OpenAccountPage } from '../../../src/ui/pages/OpenAccountPage';
 import { formatCurrency, parseCurrency } from '../../../src/common/helpers/stringHelpers';
-import { openMultipleAccounts } from '../../../src/common/helpers/openMultipleAccounts';
+import {
+    openMultipleAccounts,
+    NEW_ACCOUNT_INITIAL_BALANCE
+} from '../../../src/common/helpers/openMultipleAccounts';
 import { transferFunds } from '../../../src/common/helpers/transferFunds';
 
+const singleAccountTransferTestData = [
+    { accountType: 'CHECKING' },
+    { accountType: 'SAVINGS' },
+];
+
 test.describe('Single account', () => {
-    test(`The user is able to transfer funds to his checking account`, async (
-        { user, signUpUser, page }
-    ) => {
-        await allure.severity('normal');
-        const profilePage = new ProfilePage(page);
-        const openAccountPage = new OpenAccountPage(page);
-        const accountOverviewPage = new AccountOverviewPage(page);
+    singleAccountTransferTestData.forEach(({ accountType }) => {
+        test(`The user is able to transfer funds` + 
+            ` to his ${accountType.toLowerCase()} account`, 
+            async ({ user, signUpUser, page }) => {
+            await allure.severity('normal');
+            const profilePage = new ProfilePage(page);
+            const openAccountPage = new OpenAccountPage(page);
+            const accountOverviewPage = new AccountOverviewPage(page);
 
-        await signUpUser(user, page);
-        await profilePage.clickAccountOverviewLink();
-        await accountOverviewPage.assertAccountOverviewPageIsLoaded();
+            await signUpUser(user, page);
+            await profilePage.clickAccountOverviewLink();
+            await accountOverviewPage.assertAccountOverviewPageIsLoaded();
 
-        const firstAccountNumber = accountOverviewPage
-            .getAccountNumberFromTheTableRow(0);
-        const totalBalance = await accountOverviewPage.getTotalBalance();
-        let firstAccountBalance = totalBalance;
-        let firstAccountAvailableBalance = totalBalance;
-        const {
-            updatedFirstAccountBalance,
-            updatedFirstAccountAvailableBalance,
-            newAccountIds
-        } =
-            await openMultipleAccounts({
-                accountNumber: 1,
-                accountType: 'CHECKING',
-                profilePage,
-                openAccountPage,
-                firstAccountNumber,
+            const firstAccountNumber = await accountOverviewPage
+                .getAccountNumberFromTheTableRow(0);
+            const totalBalance = await accountOverviewPage.getTotalBalance();
+            let firstAccountBalance = totalBalance;
+            let firstAccountAvailableBalance = totalBalance;
+            const {
+                updatedFirstAccountBalance,
+                updatedFirstAccountAvailableBalance,
+                newAccountIds
+            } =
+                await openMultipleAccounts({
+                    accountNumber: 1,
+                    accountType,
+                    profilePage,
+                    openAccountPage,
+                    firstAccountNumber,
+                    firstAccountBalance,
+                    firstAccountAvailableBalance
+                });
+            const amountToTransfer = String(
+                parseCurrency(updatedFirstAccountBalance) / 2
+            );
+            firstAccountBalance = formatCurrency(
+                parseCurrency(updatedFirstAccountBalance) 
+                - Number(amountToTransfer)
+            );
+            firstAccountAvailableBalance = firstAccountBalance;
+
+            const secondAccountBalance = formatCurrency(
+                NEW_ACCOUNT_INITIAL_BALANCE + Number(amountToTransfer)
+            );
+            const secondAccountAvailableBalance = secondAccountBalance;
+
+            await transferFunds(
+                page, amountToTransfer, firstAccountNumber, newAccountIds[0]
+            );
+            await profilePage.clickAccountOverviewLink();
+            await accountOverviewPage.assertAccountOverviewPageIsLoaded();
+            await accountOverviewPage.assertcorrectDataInTheTableRow(
+                0,
                 firstAccountBalance,
                 firstAccountAvailableBalance
-            });
-        const amountToTransfer = String(
-            parseCurrency(updatedFirstAccountBalance) / 2
-        );
-        firstAccountBalance = formatCurrency(
-            parseCurrency(updatedFirstAccountBalance) - Number(amountToTransfer)
-        );
-        firstAccountAvailableBalance = firstAccountBalance;
-
-        const secondAccountBalance = formatCurrency(
-            90 + Number(amountToTransfer)
-        );
-        const secondAccountAvailableBalance = secondAccountBalance
-
-        await transferFunds(
-            page, amountToTransfer, firstAccountNumber, newAccountIds[0]
-        );
-        await profilePage.clickAccountOverviewLink();
-        await accountOverviewPage.assertAccountOverviewPageIsLoaded();
-        await accountOverviewPage.assertcorrectDataInTheTableRow(
-            0,
-            firstAccountBalance,
-            firstAccountAvailableBalance
-        );
-        await accountOverviewPage.assertcorrectDataInTheTableRow(
-            1,
-            secondAccountBalance,
-            secondAccountAvailableBalance
-        );
-        await accountOverviewPage.assertcorrectDataInTheTotalRow(
-            totalBalance
-        );
-    });
-
-    test(`The user is able to transfer funds to his savings account`, async (
-        { user, signUpUser, page }
-    ) => {
-        await allure.severity('normal');
-        const profilePage = new ProfilePage(page);
-        const openAccountPage = new OpenAccountPage(page);
-        const accountOverviewPage = new AccountOverviewPage(page);
-
-        await signUpUser(user, page);
-        await profilePage.clickAccountOverviewLink();
-        await accountOverviewPage.assertAccountOverviewPageIsLoaded();
-
-        const firstAccountNumber = accountOverviewPage
-            .getAccountNumberFromTheTableRow(0);
-        const totalBalance = await accountOverviewPage.getTotalBalance();
-        let firstAccountBalance = totalBalance;
-        let firstAccountAvailableBalance = totalBalance;
-        const {
-            updatedFirstAccountBalance,
-            updatedFirstAccountAvailableBalance,
-            newAccountIds
-        } =
-            await openMultipleAccounts({
-                accountNumber: 1,
-                accountType: 'SAVINGS',
-                profilePage,
-                openAccountPage,
-                firstAccountNumber,
-                firstAccountBalance,
-                firstAccountAvailableBalance
-            });
-        const amountToTransfer = String(
-            parseCurrency(updatedFirstAccountBalance) / 2
-        );
-        firstAccountBalance = formatCurrency(
-            parseCurrency(updatedFirstAccountBalance) - Number(amountToTransfer)
-        );
-        firstAccountAvailableBalance = firstAccountBalance;
-
-        const secondAccountBalance = formatCurrency(
-            90 + Number(amountToTransfer)
-        );
-        const secondAccountAvailableBalance = secondAccountBalance
-        await transferFunds(
-            page, amountToTransfer, firstAccountNumber, newAccountIds[0]
-        );
-        await profilePage.clickAccountOverviewLink();
-        await accountOverviewPage.assertAccountOverviewPageIsLoaded();
-        await accountOverviewPage.assertcorrectDataInTheTableRow(
-            0,
-            firstAccountBalance,
-            firstAccountAvailableBalance
-        );
-        await accountOverviewPage.assertcorrectDataInTheTableRow(
-            1,
-            secondAccountBalance,
-            secondAccountAvailableBalance
-        );
-        await accountOverviewPage.assertcorrectDataInTheTotalRow(
-            totalBalance
-        );
+            );
+            await accountOverviewPage.assertcorrectDataInTheTableRow(
+                1,
+                secondAccountBalance,
+                secondAccountAvailableBalance
+            );
+            await accountOverviewPage.assertcorrectDataInTheTotalRow(
+                totalBalance
+            );
+        });
     });
 });
 
@@ -157,7 +105,7 @@ test.describe('Multiple accounts', () => {
         await profilePage2.clickAccountOverviewLink();
         await accountOverviewPage2.assertAccountOverviewPageIsLoaded();
 
-        const secondAccountNumber = accountOverviewPage2
+        const secondAccountNumber = await accountOverviewPage2
             .getAccountNumberFromTheTableRow(0);
         const secondTotalBalance = await accountOverviewPage2
             .getTotalBalance();
@@ -189,7 +137,7 @@ test.describe('Multiple accounts', () => {
         await accountOverviewPage1.assertcorrectDataInTheTableRow(
             0,
             firstAccountBalance,
-            secondAccountBalance
+            firstAccountBalance
         );
         await accountOverviewPage1.assertcorrectDataInTheTotalRow(
             firstAccountBalance
@@ -202,7 +150,7 @@ test.describe('Multiple accounts', () => {
             secondAccountBalance
         );
         await accountOverviewPage2.assertcorrectDataInTheTotalRow(
-            firstAccountBalance
+            secondAccountBalance
         );
     });
 });

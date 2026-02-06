@@ -19,7 +19,7 @@ test.describe('Single account', () => {
         await profilePage.clickAccountOverviewLink();
         await accountOverviewPage.assertAccountOverviewPageIsLoaded();
 
-        const firstAccountNumber = accountOverviewPage
+        const firstAccountNumber = await accountOverviewPage
             .getAccountNumberFromTheTableRow(0);
         const totalBalance = await accountOverviewPage.getTotalBalance();
         let firstAccountBalance = totalBalance;

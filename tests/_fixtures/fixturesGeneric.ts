@@ -1,4 +1,5 @@
 import { test as base } from '@playwright/test';
+import type { BrowserContext } from 'playwright';
 import { Logger } from '../../src/common/logger/Logger';
 import * as allure from 'allure-js-commons';
 import { parseTestTreeHierarchy } from '../../src/common/helpers/allureHelpers';
@@ -24,18 +25,21 @@ export const test = base.extend<
   usersNumber: [1, { option: true }],
   contextsNumber: [1, { option: true }],
   pages: async ({ browser, contextsNumber }, use) => {
-    let pages = Array(contextsNumber);
+    const pages = Array(contextsNumber);
+    const contexts: BrowserContext[] = [];
 
     for (let i = 0; i < contextsNumber; i++) {
       const context = await browser.newContext();
-
+      contexts.push(context);
       pages[i] = await context.newPage();
     }
     await use(pages);
+    for (const ctx of contexts) {
+      await (ctx as BrowserContext).close();
+    }
   },
   user: async ({ logger }, use) => {
     const user = generateNewUserData(logger);
-    console.log(user);
     await use(user);
   },
   users: async ({ logger, usersNumber }, use) => {

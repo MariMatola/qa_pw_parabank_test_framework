@@ -1,4 +1,5 @@
 import { test } from '../../_fixtures/fixtures';
+import { expect } from '@playwright/test';
 import * as allure from 'allure-js-commons';
 import { ProfilePage } from '../../../src/ui/pages/ProfilePage';
 import { AccountOverviewPage } from '../../../src/ui/pages/AccountOverviewPage';
@@ -15,8 +16,8 @@ test.describe('Transactions', () => {
         await signUpUser(user, page);
         await profilePage.clickAccountOverviewLink();
         await accountOverviewPage.assertAccountOverviewPageIsLoaded();
-        const firstAccountNumber = accountOverviewPage
-        .getAccountNumberFromTheTableRow(0);
+        const firstAccountNumber = await accountOverviewPage
+            .getAccountNumberFromTheTableRow(0);
 
         const findTransactionsPage = new FindTransactionsPage(page);
 
@@ -24,5 +25,7 @@ test.describe('Transactions', () => {
         await findTransactionsPage.assertFindTransactionsPageIsLoaded();
 
         await findTransactionsPage.searchByAccount(firstAccountNumber);
+        const resultsCount = await findTransactionsPage.getResultsCount();
+        expect(resultsCount).toBeGreaterThanOrEqual(0);
     });
 });

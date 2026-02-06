@@ -1,6 +1,5 @@
 import { test } from '../../_fixtures/fixtures';
 import { HomePage } from '../../../src/ui/pages/HomePage';
-import { ProfilePage } from '../../../src/ui/pages/ProfilePage';
 import * as allure from 'allure-js-commons';
 import { faker } from '@faker-js/faker';
 
@@ -13,13 +12,15 @@ const signInScenarios = [
         name: 'Non-existent username',
         getUsername: () => faker.internet.username(),
         getPassword: (user) => user.password,
-        expectedErrorMessage: 'Invalid username or password',
+        expectedErrorMessage: 'The username and password' 
+            +' could not be verified.',
     },
     {
         name: 'Invalid password',
         getUsername: (user) => user.username,
         getPassword: () => faker.internet.password(),
-        expectedErrorMessage: 'Invalid username or password',
+        expectedErrorMessage: 'The username and password' 
+        + ' could not be verified.',
     },
     {
         name: 'Empty username',

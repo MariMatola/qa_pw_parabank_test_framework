@@ -20,7 +20,7 @@ test.describe('Single account', () => {
         await profilePage.clickAccountOverviewLink();
         await accountOverviewPage.assertAccountOverviewPageIsLoaded();
 
-        const firstAccountNumber = accountOverviewPage
+        const firstAccountNumber = await accountOverviewPage
             .getAccountNumberFromTheTableRow(0);
         const totalBalance = await accountOverviewPage.getTotalBalance();
         let firstAccountBalance = totalBalance;
@@ -135,7 +135,7 @@ test.describe('Multiple accounts', () => {
         await accountOverviewPage1.assertcorrectDataInTheTableRow(
             0,
             firstAccountBalance,
-            secondAccountBalance
+            firstAccountBalance
         );
         await accountOverviewPage1.assertcorrectDataInTheTotalRow(
             firstAccountBalance
@@ -148,7 +148,7 @@ test.describe('Multiple accounts', () => {
             secondAccountBalance
         );
         await accountOverviewPage2.assertcorrectDataInTheTotalRow(
-            firstAccountBalance
+            secondAccountBalance
         );
     });
 });

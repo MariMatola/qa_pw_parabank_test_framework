@@ -7,7 +7,7 @@ test.use({
     usersNumber: 2,
 });
 
-test('User is able to sign up with valid data', async (
+test('User is able to update contact info with valid data', async (
     {users, signUpUser, page}
 ) => {
     await allure.severity('normal');
