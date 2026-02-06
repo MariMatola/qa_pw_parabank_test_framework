@@ -4,17 +4,22 @@ import { testStep } from '../../common/helpers/pwHelpers';
 export class AccountDetailsPage {
   page: Page;
   userId: number;
-  fromDateInput: Locator;
-  toDateInput: Locator;
+  activityPeriodSelect: Locator;
+  typeSelect: Locator;
   goButton: Locator;
   transactionTableRows: Locator;
 
   constructor(page: Page, userId = 0) {
     this.page = page;
     this.userId = userId;
-    this.fromDateInput = page.locator('input[name="criteria.fromDate"]');
-    this.toDateInput = page.locator('input[name="criteria.toDate"]');
-    this.goButton = page.locator('input[value="Go"]');
+    // Account Details page filters by Activity Period (month) and Type, not by date range
+    this.activityPeriodSelect = page
+      .getByRole('row', { name: /Activity Period/ })
+      .getByRole('combobox');
+    this.typeSelect = page
+      .getByRole('row', { name: /Type/ })
+      .getByRole('combobox');
+    this.goButton = page.getByRole('button', { name: 'Go' });
     this.transactionTableRows = page.locator('#transactionTable tbody tr');
   }
 
@@ -22,10 +27,14 @@ export class AccountDetailsPage {
     return await testStep(title, stepToRun, this.userId);
   }
 
-  async filterTransactions(fromDate: string, toDate: string): Promise<void> {
+  /** Filter Account Activity by period (e.g. "All", "January") and type (e.g. "All", "Credit", "Debit"). */
+  async filterTransactionsByPeriodAndType(
+    period: string,
+    type: string,
+  ): Promise<void> {
     await this.step('Filter Transactions', async () => {
-      await this.fromDateInput.fill(fromDate);
-      await this.toDateInput.fill(toDate);
+      await this.activityPeriodSelect.selectOption(period);
+      await this.typeSelect.selectOption(type);
       await this.goButton.click();
     });
   }

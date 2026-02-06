@@ -90,7 +90,9 @@ export class ProfilePage {
 
     async assertUserIsRegistered(username: string): Promise<void> {
         await this.step('Assert User is Registered', async () => {
-            const welcomeMessage = this.page.getByText(`Welcome ${username}`);
+            const welcomeMessage = this.page.getByRole('heading', {
+                name: `Welcome ${username}`,
+            });
             await expect(welcomeMessage).toBeVisible();
         });
     }

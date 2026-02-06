@@ -20,7 +20,7 @@ test.describe('Account Details & Activity', () => {
         await accountOverviewPage.assertAccountOverviewPageIsLoaded();
         await accountOverviewPage.openFirstAccountDetails();
         const detailsPage = new AccountDetailsPage(page);
-        await detailsPage.filterTransactions('2025-01-01', '2025-12-31');
+        await detailsPage.filterTransactionsByPeriodAndType('All', 'All');
         const transactionsCount = await detailsPage.getTransactionsCount();
         expect(transactionsCount).toBeGreaterThanOrEqual(0);
     });

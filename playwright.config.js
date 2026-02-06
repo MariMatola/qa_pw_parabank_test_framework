@@ -1,9 +1,6 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const path = require('path');
+const { defineConfig, devices } = require('@playwright/test');
+const dotenv = require('dotenv');
 
 /**
  * Load environment variables from .env file.
@@ -15,7 +12,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,

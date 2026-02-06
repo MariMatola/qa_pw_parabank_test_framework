@@ -4,7 +4,6 @@ import { expect, testStep } from '../../common/helpers/pwHelpers';
 export class AccountOverviewPage {
     readonly page: Page;
     readonly userId: number;
-    readonly accountOverviewHeading: Locator;
     readonly accountsTable: Locator;
     readonly accountColumnHeader: Locator;
     readonly balanceColumnHeader: Locator;
@@ -15,9 +14,6 @@ export class AccountOverviewPage {
     constructor(page: Page, userId = 0) {
         this.page = page;
         this.userId = userId;
-        this.accountOverviewHeading = page.getByRole('heading', {
-            name: 'Accounts Overview',
-        });
         this.accountsTable = page.locator('#accountTable');
         this.accountColumnHeader = page.getByRole('columnheader', {
             name: 'Account',
@@ -72,7 +68,7 @@ export class AccountOverviewPage {
 
     async assertAccountOverviewPageIsLoaded(): Promise<void> {
         await this.step('Assert Account Overview Page is Loaded', async () => {
-            await expect(this.accountOverviewHeading).toBeVisible();
+            await expect(this.accountsTable).toBeVisible();
         });
     }
 
