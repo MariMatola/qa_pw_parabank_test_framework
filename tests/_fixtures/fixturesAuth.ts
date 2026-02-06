@@ -1,16 +1,18 @@
+import type { Page } from '@playwright/test';
 import { test as genericTest } from './fixturesGeneric';
+import type { User } from '../../src/common/testData/generateNewUser';
 import { SignUpPage } from '../../src/ui/pages/SignUpPage';
 import { ProfilePage } from '../../src/ui/pages/ProfilePage';
 import { HomePage } from '../../src/ui/pages/HomePage';
 
 export const test = genericTest.extend<
     {
-        signUpUser;
-        signInUser;
+        signUpUser: (user: User, page: Page) => Promise<void>;
+        signInUser: (user: User, page: Page) => Promise<void>;
     }
 >({
-    signUpUser: async ({ }, use) => {
-        const signUp = async (user, page) => {
+    signUpUser: async ({}, use) => {
+        const signUp = async (user: User, page: Page): Promise<void> => {
             const signUpPage = new SignUpPage(page);
             const profilePage = new ProfilePage(page);
 
@@ -24,8 +26,8 @@ export const test = genericTest.extend<
         await use(signUp);
     },
 
-    signInUser: async ({ }, use) => {
-        const signIn = async (user, page) => {
+    signInUser: async ({}, use) => {
+        const signIn = async (user: User, page: Page): Promise<void> => {
             const homePage = new HomePage(page);
             const profilePage = new ProfilePage(page);
             await homePage.goToHomePage();

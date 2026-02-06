@@ -1,25 +1,29 @@
 import { test as base } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import type { BrowserContext } from 'playwright';
 import { Logger } from '../../src/common/logger/Logger';
 import * as allure from 'allure-js-commons';
 import { parseTestTreeHierarchy } from '../../src/common/helpers/allureHelpers';
 import fs from 'fs';
 import path from 'path';
-import { generateNewUserData } from '../../src/common/testData/generateNewUser';
+import {
+    generateNewUserData,
+    type User,
+} from '../../src/common/testData/generateNewUser';
 
 export const test = base.extend<
   {
-    usersNumber;
-    contextsNumber;
-    pages;
-    user;
-    users;
-    infoTestLog;
-    addAllureTestHierarchy;
-    cleanAllureResults;
+    usersNumber: number;
+    contextsNumber: number;
+    pages: Page[];
+    user: User;
+    users: User[];
+    infoTestLog: string;
+    addAllureTestHierarchy: string;
   },
   {
-    logger;
+    logger: Logger;
+    cleanAllureResults: string;
   }
 >({
   usersNumber: [1, { option: true }],
