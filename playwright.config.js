@@ -1,16 +1,18 @@
-import { defineConfig, devices } from '@playwright/test';
+const path = require('path');
+const { defineConfig, devices } = require('@playwright/test');
+const dotenv = require('dotenv');
 
 /**
- * Read environment variables from file.
+ * Load environment variables from .env file.
+ * Allows different environments (dev, qa, prod) via BASE_URL.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -22,8 +24,12 @@ export default defineConfig({
   reporter: [['allure-playwright'], ['list', { printSteps: false }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: https://example.com
+    /* Base URL from env (e.g. dev, qa, prod). Default: Parabank production. */
+    baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com/',
+    screenshot: 'only-on-failure',
+    video: 'on',
+    /* Retain trace on failure (retries are disabled, so on-first-retry would not run) */
+    trace: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
